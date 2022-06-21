@@ -1,14 +1,15 @@
-import { isObject, isArray, isString } from "./is";
+import { h } from 'vue'
+import { isObject, isArray, isString, isFunction } from './is'
 
 export function createEventsObj(eventObj = {}, row) {
-  if (!eventObj) return {};
-  const events = {};
+  if (!eventObj) return {}
+  const events = {}
   Object.keys(eventObj).map((key) => {
     events[key] = ($event) => {
-      eventObj[key].call(this, row, $event);
-    };
-  });
-  return events;
+      eventObj[key].call(this, row, $event)
+    }
+  })
+  return events
 }
 
 /**
@@ -18,57 +19,52 @@ export function createEventsObj(eventObj = {}, row) {
  * @param {object} rowData 表格行数据
  */
 
-export function createElementByElType(h, option, rowData) {
-  if (!option.key) {
-    throw new Error("createElementByElType option row key is required");
-  }
-  switch (true) {
-    case option.elType === "image":
+export function createElementByChildrenType(option, rowData) {
+  const { childrenType } = option
+  switch (childrenType) {
+    case 'image':
       const src = option.formatter
         ? handleFormatter(option.formatter, rowData)
-        : formatRowDataByKey(option.key, rowData);
-      return h("img", {
-        on: createEventsObj.call(this.$parent, option.on, rowData),
-        attrs: {
-          src,
-        },
-        class: option.class,
-        style: option.style,
-      });
+        : formatRowDataByKey(option.key, rowData)
+      const childrenProps = isFunction(option.attrs)
+        ? option.attrs(rowData)
+        : option.attrs
+
+      return h('img', {
+        src,
+        ...childrenProps
+      })
+    default:
   }
 }
 
 function handleFormatter(formatter, rowData) {
-  if (typeof formatter === "function") {
-    return formatter(rowData);
+  if (typeof formatter === 'function') {
+    return formatter(rowData)
   } else {
-    return formatter;
+    return formatter
   }
 }
 
 export function formatRowDataByKey(key, row) {
-  if (typeof key !== "string") {
-    throw new TypeError("key is not string");
+  if (typeof key !== 'string') {
+    throw new TypeError('key is not string')
   }
 
-  function hander(keys, row) {
-    let result;
-    const firstKey = keys.shift();
-    result = row[firstKey];
-    if (keys.length > 0) {
-      result = hander(keys, result);
-    }
-    return result;
-  }
-
-  const splitKey = key.split(".");
+  const splitKey = key.split('.')
   if (splitKey.length === 1) {
-    return row[splitKey[0]];
+    return row[splitKey[0]]
   } else {
     try {
-      return hander(splitKey, row);
+      return splitKey.reduce((pre, cur) => {
+        if (pre && isObject(pre)) {
+          return pre[cur]
+        } else {
+          return ''
+        }
+      }, row)
     } catch (error) {
-      throw new Error(error);
+      return ''
     }
   }
 }
@@ -76,47 +72,47 @@ export function formatRowDataByKey(key, row) {
 export function merge(target, source) {
   if (isObject(target) && isObject(source)) {
     Object.keys(source).map((sourceKey) => {
-      let targetVal = target[sourceKey];
-      let sourceVal = source[sourceKey];
+      let targetVal = target[sourceKey]
+      const sourceVal = source[sourceKey]
       // 如果没有
       if (!targetVal) {
-        targetVal = sourceVal;
+        targetVal = sourceVal
       } else if (isObject(targetVal) && isObject()) {
-        target[sourceKey] = merge(targetVal, sourceVal);
+        target[sourceKey] = merge(targetVal, sourceVal)
       } else if (isArray(targetVal) && isArray(sourceVal)) {
-        target[sourceKey] = [...targetVal, ...sourceVal];
+        target[sourceKey] = [...targetVal, ...sourceVal]
       }
-    });
+    })
   }
 
-  return target;
+  return target
 }
 
-export const getSelectOptions = (column, map = {}) => {
-  let options = [];
-  if (isArray(column.options)) {
-    options = column.options;
-  } else if (isString) {
-    options = map[column.options] || [];
+export const getSelectOptions = (options, map = {}) => {
+  let result = []
+  if (isArray(options)) {
+    result = options
+  } else if (isString(options)) {
+    result = map[options] || []
   }
 
-  return options;
-};
+  return result
+}
 
 export function param2Obj(url) {
-  const search = decodeURIComponent(url.split("?")[1]).replace(/\+/g, " ");
+  const search = decodeURIComponent(url.split('?')[1]).replace(/\+/g, ' ')
   if (!search) {
-    return {};
+    return {}
   }
-  const obj = {};
-  const searchArr = search.split("&");
+  const obj = {}
+  const searchArr = search.split('&')
   searchArr.forEach((v) => {
-    const index = v.indexOf("=");
+    const index = v.indexOf('=')
     if (index !== -1) {
-      const name = v.substring(0, index);
-      const val = v.substring(index + 1, v.length);
-      obj[name] = val;
+      const name = v.substring(0, index)
+      const val = v.substring(index + 1, v.length)
+      obj[name] = val
     }
-  });
-  return obj;
+  })
+  return obj
 }

@@ -1,4 +1,5 @@
 module.exports = {
+  root:true,
   env: {
     browser: true,
     es2021: true,
@@ -17,5 +18,17 @@ module.exports = {
     'prettier',
   ],
   rules: {
+    "no-unneeded-ternary":"off",
+    "consistent-return":"off",
+    "no-case-declarations":"off",
+    "no-else-return":"off",
+    "prefer-destructuring":"off",
+    "no-use-before-define":"off",
+    "default-param-last":"off",
+    "no-param-reassign":"off",
+    "array-callback-return":"off",
+    "import/first":"off",
+    "one-var":"off",
+    "import/no-extraneous-dependencies":"off",
   },
 };
