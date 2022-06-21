@@ -1,8 +1,8 @@
 {
-  "name": "test",
+  "name": "pd-simple-ui-vue3",
   "version": "1.0.0",
   "description": "基于 element-plus 封装的 table、form、search-form 组件 vue3 版本",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "lint": "eslint --ext .js,.vue",
     "test": "echo \"Error: no test specified\" && exit 1",

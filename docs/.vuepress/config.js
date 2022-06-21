@@ -1,6 +1,7 @@
 const { defaultTheme } = require('vuepress')
 
 module.exports = {
+  base:"/vue-simple-ui-vue3/",
   title:"pd-simple-ui vue3",
   description:"基于 element-plus 封装的 table、form、search-form 组件 vue3 版本",
 

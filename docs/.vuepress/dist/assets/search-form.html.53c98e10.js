@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-db3674ae","path":"/search-form.html","title":"","lang":"en-US","frontmatter":{},"excerpt":"","headers":[{"level":2,"title":"SearchForm","slug":"searchform","children":[]}],"git":{"updatedTime":1655805272000,"contributors":[{"name":"pianduan","email":"pianduan95@gmail.com","commits":1}]},"filePathRelative":"search-form.md"}');export{e as data};
