@@ -168,7 +168,7 @@ export default {
                 h(
                   ElFormItem,
                   {
-                    ...this.formItemDefaultProps,
+                    ...this.defaultFormItemProps,
                     ...formItemProps,
                     prop
                   },

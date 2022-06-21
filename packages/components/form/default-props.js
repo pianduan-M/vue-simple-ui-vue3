@@ -28,7 +28,7 @@ export default {
     }
   },
 
-  formItemDefaultProps: {
+  defaultFormItemProps: {
     type: Object,
     default() {
       return {}
