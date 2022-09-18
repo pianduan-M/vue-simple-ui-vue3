@@ -134,24 +134,24 @@ export default {
       let formItems = []
       try {
         formItems = this.formItems
-          // 过滤隐藏表单 ishidden 可以是一个函数并且这个函数的 this 是指向 from 的父组件
+          // 过滤隐藏表单 isHidden 可以是一个函数并且这个函数的 this 是指向 from 的父组件
           .filter((item) => {
-            const ishidden = item.isHidden
-            if (isFunction(ishidden)) {
-              return ishidden(this.modelValue)
+            const isHidden = item.isHidden
+            if (isFunction(isHidden)) {
+              return !isHidden(this.modelValue)
             }
-            return !ishidden
+            return !isHidden
           })
           .map((item) => {
             const {
+              layout,
+              type,
               options,
               renderLabel,
               isHidden,
-              layout,
               slotName,
               inputAttrs,
               placeholder,
-              type,
               prop,
               inputChildrenComponent,
               ...formItemProps

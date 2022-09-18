@@ -12,7 +12,6 @@
 
     <pdForm
       :formItems="formItems"
-     
       v-model="formData"
       ref="formRef"
       :rules="rules"
@@ -27,44 +26,46 @@
 
     <PdSearchForm
       :gutter="20"
-      label-suffix=":"
       :formItems="itemOptions"
       input-class="search-input"
       v-model="searchValue"
       size="default"
-      flex-wrap
       :selectOptionMap="selectOptionMap"
+      flex-wrap
+      :commonProps="{ style: { width: '100px' } }"
+      searchBtnPosition="end"
     >
       <template #after>
-        <el-button size="default" type="primary" @click="handleSearch">搜索</el-button>
+        <el-button size="default" type="primary" @click="handleSearch"
+          >搜索</el-button
+        >
         <el-button size="default" type="primary" @click="handleEditorAdd({})"
           >新增</el-button
         >
       </template>
 
       <template #weight>
-        <el-input></el-input>
-
+        <el-input style="width: 100px"></el-input>
       </template>
     </PdSearchForm>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref,reactive } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
 
 export default defineComponent({
   name: 'TestAdmin'
 })
 </script>
 <script setup>
-import PdTable from '../../packages/components/table'
-import PdSearchForm from '../../packages/components/search-form'
+import PdSimpleUi from '../../packages'
 import { tableColumns } from '../config/table.config'
-import pdForm from '../../packages/components/form'
-import { formItems, rules, searchFormItems } from '../config/form.config'
+import { rules, searchFormItems } from '../config/form.config'
 
-const useForm = pdForm.useForm
+const { PdTable, PdSearchForm, PdForm } = PdSimpleUi
+
+const useForm = PdForm.useForm
 const tableData = [
   {
     createTime: '2022/02/12',
@@ -96,14 +97,70 @@ const searchValue = ref({})
 
 const selectOptionMap = ref({})
 
-const handleSearch =() => {
-  console.log(searchValue.value);
+const handleSearch = () => {
+  console.log(searchValue.value)
 }
+
+const formItems = [
+  {
+    prop: 'name',
+    label: '姓名',
+    type: 'input'
+  },
+  {
+    isHidden(value) {
+      if (value.gender === 'woman') {
+        return true
+      }
+
+      console.log(value)
+      return false
+    },
+    prop: 'age',
+    label: '年龄',
+    renderLabel: 'ageLabel',
+    type: 'input',
+    inputAttrs: {
+      onChange() {
+        console.log(this, 'onChange', formItems)
+      }
+    }
+  },
+  {
+    prop: 'gender',
+    label: '性别',
+    renderLabel: () => '性别性别性别性别性别性别性别',
+    type: 'select',
+    options: [
+      {
+        label: '男',
+        value: 'man'
+      },
+      {
+        label: '女',
+        value: 'woman'
+      }
+    ],
+    inputAttrs: {
+      onChange(value) {
+        console.log(value, 'value', this)
+      }
+    }
+  },
+  {
+    prop: 'height',
+    label: '身高',
+    type: 'input'
+  },
+  {
+    label: '体重',
+    slotName: 'weight'
+  }
+]
 
 const itemOptions = reactive(searchFormItems)
 
 setTimeout(() => {
-
   selectOptionMap.value.gender = [
     {
       label: '男',

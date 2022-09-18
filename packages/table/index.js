@@ -1,4 +1,4 @@
-import PdTable from './table'
+import PdTable from './src/table'
 
 PdTable.install =  (app, options)=> {
   if (options) {

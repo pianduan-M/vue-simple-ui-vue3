@@ -37,5 +37,15 @@ export default {
     default() {
       return {}
     }
+  },
+  commonProps: {
+    type: Object,
+    default() {
+      return {}
+    }
+  },
+  searchBtnPosition: {
+    type: String,
+    default: ''
   }
 }

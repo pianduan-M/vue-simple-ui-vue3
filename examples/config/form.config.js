@@ -10,6 +10,11 @@ export const formItems = [
     label: "年龄",
     renderLabel: "ageLabel",
     type: "input",
+    inputAttrs: {
+      onChange() {
+        console.log(this, 'onChange', formItems);
+      }
+    }
   },
   {
     prop: "gender",
@@ -26,12 +31,17 @@ export const formItems = [
         value: "woman",
       },
     ],
+    inputAttrs: {
+      onChange(value) {
+        console.log(value, 'value', this);
+      }
+    }
   },
   {
     prop: "height",
     label: "身高",
     type: "input",
-   
+
   },
   {
     label: "体重",
@@ -55,7 +65,7 @@ export const searchFormItems = [
     label: "性别",
     type: "select",
     prop: "gender",
-    options:"gender",
+    options: "gender",
     // options: [
     //   {
     //     label: "男",
@@ -69,35 +79,37 @@ export const searchFormItems = [
     // options:genderOptions ,
   },
   {
-    slotName:"weight",
-    prop:"weight",
-    label:"体重"
+    slotName: "weight",
+    prop: "weight",
+    label: "体重"
   },
   {
-    label:"时间",
-    prop:"createTime",
-    type:"ElDatePicker",
-    attrs:{
-      onChange(val) {
-        console.log(val);
-      }
-    }
+    label: "时间",
+    prop: "createTime",
+    type: "date",
+    onChange(val) {
+      console.log(val);
+    },
+    placeholder: "请选择",
+    format:"YYYY-MM-DD",
+    valueFormat:"YYYY-MM-DD",
+
   }
 ];
 
 
 export const rules = {
-  name:[
+  name: [
     {
-      required:true,message:"请输入3333",trigger:"blur"
+      required: true, message: "请输入3333", trigger: "blur"
     }
   ],
-  age:[
+  age: [
     {
-      required:true,message:"请输入3333",trigger:"blur"
+      required: true, message: "请输入3333", trigger: "blur"
     }
   ],
-  
+
 
 }
 

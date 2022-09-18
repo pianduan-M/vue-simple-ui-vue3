@@ -1,6 +1,6 @@
-import PdForm from "./components/form";
-import PdTable from "./components/table";
-import PdSearchForm from "./components/search-form";
+import PdForm from "./form";
+import PdTable from "./table";
+import PdSearchForm from "./searchForm";
 
 const components = [PdForm, PdTable, PdSearchForm];
 
