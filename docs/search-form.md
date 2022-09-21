@@ -22,7 +22,7 @@
 | label         | 表单 label                                                   | string              | —            | —      |
 | labelSlotName | 表单 label 插槽名                                            | string              | —            | —      |
 | prop          | 表单域字段                                                   | string              | —            | —      |
-| type          | 表单项下的表单元素类型,element-ui 元素,可以是全局注册下的组件名，或者组件，当是字符串时优先匹配 input select 使用el-input el-select，当没有匹配上时使用 resolveComponent 全局匹配 | string,vueComponent | input,select | —      |
+| component          | 表单项下的表单元素类型,element-ui 元素,可以是全局注册下的组件名，或者组件，当是字符串时优先匹配 input select 使用el-input el-select，当没有匹配上时使用 resolveComponent 全局匹配 | string,vueComponent | input,select | —      |
 | options       | el-select 的 options 配置，当是 string 类型时，回到 selectOptionMap 中取值 | array string        | —            | —      |
 | attrs         | 表单元素 props                                               | object              | —            | —      |
 | slotName      | 表单元素插槽名                                               | string              | —            | —      |

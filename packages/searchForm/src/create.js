@@ -114,7 +114,7 @@ function createFormItemChildren(option) {
 
 function createFormItemContentChildren(item) {
   // eslint-disable-next-line prefer-const
-  let { label, prop, labelSlotName, type, options, slotName, labelStyle, labelClass, ...rest } = item
+  let { label, prop, labelSlotName, component, options, slotName, labelStyle, labelClass, ...rest } = item
 
 
   if (slotName) {
@@ -126,8 +126,8 @@ function createFormItemContentChildren(item) {
 
   let inputComponent,
     inputChildren = []
-  if (isString(type)) {
-    switch (type) {
+  if (isString(component)) {
+    switch (component) {
       case 'select':
         inputComponent = resolveComponent('el-select')
         inputComponent = inputComponent ? inputComponent : ElSelect
@@ -147,13 +147,13 @@ function createFormItemContentChildren(item) {
         inputComponent = inputComponent ? inputComponent : ElDatePicker
         break
       default:
-        inputComponent = resolveComponent(type)
+        inputComponent = resolveComponent(component)
         break
     }
-  } else if (isObject(type)) {
-    inputComponent = type
+  } else if (isObject(component)) {
+    inputComponent = component
   } else {
-    throw new Error('option type must a component or string')
+    throw new Error('option component must a component or string')
   }
 
   const commonProps = { ...this.commonProps, }
