@@ -49,6 +49,7 @@
     "webpack-dev-server": "^4.9.2"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.9",
     "cz-conventional-changelog": "3.3.0",
     "element-plus": "^2.2.6",
     "vue": "^3.2.37"

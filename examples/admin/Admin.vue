@@ -4,25 +4,12 @@
       :columns="tableColumns"
       :data="tableData"
       :commonColumnOptions="{ align: 'center' }"
+      :selectOptionMap="selectOptionMap"
     >
       <template #operate="{ row }">
         <el-button type="text" @click="handleEditorAdd(row)">编辑</el-button>
       </template>
     </PdTable>
-
-    <pdForm
-      :formItems="formItems"
-      v-model="formData"
-      ref="formRef"
-      :rules="rules"
-      :colLayout="{ span: 24 }"
-    >
-      <template #weight>
-        <el-input type="text" v-model="formData.weight" /> </template
-    ></pdForm>
-
-    <el-button @click="handleValidate">验证</el-button>
-    <el-button @click="clearValidate">重置</el-button>
 
     <PdSearchForm
       :gutter="20"
@@ -48,11 +35,27 @@
         <el-input style="width: 100px"></el-input>
       </template>
     </PdSearchForm>
+
+    <el-dialog v-model="dialogVisible">
+      <pdForm
+        :formItems="formItems"
+        v-model="formData"
+        ref="formRef"
+        :rules="rules"
+        :colLayout="{ span: 24 }"
+      >
+        <template #weight>
+          <el-input type="text" v-model="formData.weight" /> </template
+      ></pdForm>
+
+      <el-button @click="handleValidate">验证</el-button>
+      <el-button @click="clearValidate">重置</el-button>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive, provide } from 'vue'
 
 export default defineComponent({
   name: 'TestAdmin'
@@ -74,12 +77,22 @@ const tableData = [
     gender: 'man',
     height: '188',
     weight: '70',
+    politics: 1,
+    education: 1,
     image: {
       fileUrl:
         'https://neilning-xc.github.io/2021/12/12/ckxj3g81e000p9ynthi2f2uqb/bg.jpeg'
     }
   }
 ]
+const educationList = ref([])
+tableColumns[9].enum.options = educationList
+
+const dialogVisible = ref(false)
+provide('dialogVisible', dialogVisible)
+const handleEditorAdd = () => {
+  dialogVisible.value = true
+}
 
 const { formData, formRef, clearValidate, validate } = useForm({
   name: '',
@@ -95,7 +108,7 @@ const handleValidate = () => {
 
 const searchValue = ref({})
 
-const selectOptionMap = ref({})
+const selectOptionMap = reactive({})
 
 const handleSearch = () => {
   console.log(searchValue.value)
@@ -105,7 +118,8 @@ const formItems = [
   {
     prop: 'name',
     label: '姓名',
-    type: 'input'
+    component: 'input',
+    labelTooltip: 'test'
   },
   {
     isHidden(value) {
@@ -119,18 +133,19 @@ const formItems = [
     prop: 'age',
     label: '年龄',
     renderLabel: 'ageLabel',
-    type: 'input',
+    component: 'input',
     inputAttrs: {
       onChange() {
         console.log(this, 'onChange', formItems)
       }
-    }
+    },
+    desc: 'djkashdoihasdoishadoiahsdoisahdois'
   },
   {
     prop: 'gender',
     label: '性别',
     renderLabel: () => '性别性别性别性别性别性别性别',
-    type: 'select',
+    component: 'select',
     options: [
       {
         label: '男',
@@ -150,7 +165,8 @@ const formItems = [
   {
     prop: 'height',
     label: '身高',
-    type: 'input'
+    component: 'input',
+    desc: 'shfoidshfoidshFOIDSAHFOISDHFOIDSHFOISHFOIDS'
   },
   {
     label: '体重',
@@ -161,7 +177,7 @@ const formItems = [
 const itemOptions = reactive(searchFormItems)
 
 setTimeout(() => {
-  selectOptionMap.value.gender = [
+  selectOptionMap.gender = [
     {
       label: '男',
       value: 'man'
@@ -169,6 +185,36 @@ setTimeout(() => {
     {
       label: '女',
       value: 'woman'
+    }
+  ]
+
+  selectOptionMap.politicsList = [
+    {
+      label: '群众',
+      value: 1
+    },
+    {
+      label: '党员',
+      value: 2
+    }
+  ]
+
+  educationList.value = [
+    {
+      label: '小学',
+      value: 1
+    },
+    {
+      label: '初中',
+      value: 2
+    },
+    {
+      label: '高中',
+      value: 2
+    },
+    {
+      label: '本科',
+      value: 2
     }
   ]
 }, 3000)

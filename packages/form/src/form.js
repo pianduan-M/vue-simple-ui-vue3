@@ -1,4 +1,4 @@
-import { ref, h, isRef,resolveComponent } from 'vue'
+import { ref, h, isRef, resolveComponent, inject, watch } from 'vue'
 import {
   ElForm,
   ElFormItem,
@@ -7,14 +7,18 @@ import {
   ElSelect,
   ElOption,
   ElInput,
+  ElTooltip,
 } from 'element-plus'
+import { QuestionFilled } from '@element-plus/icons-vue'
+import { formLabelStyle, formItemContentDescStyle } from './style'
 
-import { isFunction, isString, isArray } from '../../../src/utils/is'
+import { isFunction, isString, isArray, isObject } from '../../../src/utils/is'
 import { getSelectOptions } from '../../../src/utils'
-import defaultProps from './default-props'
+import defaultProps from './props'
 
 export default {
   name: 'PdForm',
+
   emit: ['update:modelValue'],
   props: {
     ...defaultProps
@@ -28,7 +32,28 @@ export default {
     const resetFields = (props) => formRef.value.resetFields(props)
     const clearValidate = (props) => formRef.value.clearValidate(props)
 
-    return { formRef, validate, validateField ,scrollToField,resetFields,clearValidate}
+
+    // 祖先节点 提供一个 dialog 开关标识
+    const dialogVisible = inject('dialogVisible')
+    watch(dialogVisible, (newVal) => {
+      if (!newVal) {
+        clearValidate()
+      }
+    })
+
+
+    return { formRef, validate, validateField, scrollToField, resetFields, clearValidate }
+  },
+  watch: {
+    // 监听 dialog 关闭 自动清除表单校验
+    visible() {
+      if (!this.visible && this.autoClearValidate) {
+        this.$refs.formRef.clearValidate();
+      }
+    },
+  },
+  computed: {
+
   },
 
   render() {
@@ -43,7 +68,8 @@ export default {
     }
 
     // 创建formItem label
-    const createFormItemLabelSlot = (renderLabel) => {
+    const createFormItemLabelSlot = (item) => {
+      const { renderLabel, label } = item
       // 如果有 form label 渲染函数
       if (renderLabel && isFunction(renderLabel)) {
         return {
@@ -58,7 +84,29 @@ export default {
         }
       }
 
-      return {}
+      const tooltips = createLabelTooltip(item)
+      return {
+        label: () => h('span', { style: formLabelStyle }, [label, tooltips])
+      }
+    }
+
+    // 创建 label tooltips
+    const createLabelTooltip = ({ labelTooltip }) => {
+      let result
+      // eslint-disable-next-line default-case
+      switch (true) {
+        case isString(labelTooltip):
+          result = h(ElTooltip, { effect: 'light', placement: 'top', content: labelTooltip }, h(QuestionFilled, { style: { width: '1em', marginLeft: "8px" } }))
+          break;
+        case isObject(labelTooltip):
+          result = h(ElTooltip, { ...labelTooltip }, QuestionFilled)
+          break;
+        case isFunction(labelTooltip):
+          result = labelTooltip(h)
+          break;
+      }
+
+      return result
     }
 
     // 创建 form item 里的 表单
@@ -68,7 +116,7 @@ export default {
         slotName,
         inputAttrs,
         placeholder,
-        type,
+        component,
         prop,
         inputChildrenComponent
       } = item
@@ -79,7 +127,7 @@ export default {
       // 如果是 select
       let children = ''
       if (options && isArray(options)) {
-       const childrenOptions = getSelectOptions(options,this.selectOptionMap)
+        const childrenOptions = getSelectOptions(options, this.selectOptionMap)
 
         children = (isRef(childrenOptions) ? childrenOptions.value : childrenOptions).map((option) =>
           h(inputChildrenComponent ? inputChildrenComponent : ElOption, {
@@ -92,8 +140,8 @@ export default {
 
       let inputComponent
       // 如果 type 是一个字符串
-      if (isString(type)) {
-        switch (type) {
+      if (isString(component)) {
+        switch (component) {
           case 'input':
             inputComponent = ElInput
             break
@@ -101,32 +149,56 @@ export default {
             inputComponent = ElSelect
             break
           default:
-            inputComponent = resolveComponent(type)
+            inputComponent = resolveComponent(component)
         }
       } else {
-        inputComponent = type
+        inputComponent = component
       }
 
       if (!inputComponent) return ''
+      const inputNode = h(
+        inputComponent,
+        {
+          ...this.defaultInputAttrs,
+          modelValue: this.modelValue[item.prop],
+          placeholder,
+          ...inputAttrs,
+          'onUpdate:modelValue': (val) => {
+            const formData = { ...this.modelValue }
+            formData[prop] = val
+            this.$emit('update:modelValue', formData)
+          }
+        },
+        () => children
+      )
+      const contentDesc = createFormItemContentDesc(item)
       return {
-        default: () =>
-          h(
-            inputComponent,
-            {
-              ...this.defaultInputAttrs,
-              modelValue: this.modelValue[item.prop],
-              placeholder,
-              ...inputAttrs,
-              'onUpdate:modelValue': (val) => {
-                const formData = { ...this.modelValue }
-                formData[prop] = val
-                this.$emit('update:modelValue', formData)
-              }
-            },
-            () => children
-          )
+        default: () => [inputNode, contentDesc]
+
       }
     }
+
+    // 创建 desc 
+    const createFormItemContentDesc = ({ desc }) => {
+      let result
+      // eslint-disable-next-line default-case
+      switch (true) {
+        case isString(desc):
+          result = desc
+          break;
+        case isFunction(desc):
+          result = desc(h)
+          break;
+      }
+
+      if (result) {
+        result = h('div', { class: ['form-item-content__desc'], style: formItemContentDescStyle }, result)
+      }
+
+      return result
+
+    }
+
 
     const createFormItems = () => {
       const colLayout = { ...this.colLayout }
@@ -145,15 +217,15 @@ export default {
           .map((item) => {
             const {
               layout,
-              type,
+              component,
               options,
               renderLabel,
               isHidden,
               slotName,
               inputAttrs,
               placeholder,
-              prop,
               inputChildrenComponent,
+              labelTooltip,
               ...formItemProps
             } = item
             const itemLayout = layout ? layout : colLayout
@@ -162,7 +234,7 @@ export default {
               ElCol,
               {
                 ...itemLayout,
-                key: item.label
+                key: item.label || item.prop || Date.now()
               },
               () =>
                 h(
@@ -170,22 +242,11 @@ export default {
                   {
                     ...this.defaultFormItemProps,
                     ...formItemProps,
-                    prop
+                    key: item.prop || Date.now()
                   },
                   {
-                    ...createFormItemLabelSlot(renderLabel),
-                    ...createFormInputs({
-                      options,
-                      renderLabel,
-                      isHidden,
-                      layout,
-                      slotName,
-                      inputAttrs,
-                      placeholder,
-                      type,
-                      inputChildrenComponent,
-                      prop
-                    })
+                    ...createFormItemLabelSlot(item),
+                    ...createFormInputs(item)
                   }
                 )
             )
@@ -198,7 +259,7 @@ export default {
     return h(
       ElForm,
       {
-        model:this.modelValue,
+        model: this.modelValue,
         ...this.$attrs,
         ref: 'formRef'
       },
@@ -211,5 +272,6 @@ export default {
           () => createFormItems()
         )
     )
-  }
+  },
+
 }

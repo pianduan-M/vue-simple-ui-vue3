@@ -1,4 +1,5 @@
 const toString = Object.prototype.toString;
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export function is(val, type) {
   return toString.call(val) === `[object ${type}]`;
@@ -27,3 +28,6 @@ export function isArray(val) {
 export function isUndef(val) {
   return typeof val === "undefined";
 }
+export function hasOwn(obj, key) {
+  return hasOwnProperty.call(obj, key);
+};

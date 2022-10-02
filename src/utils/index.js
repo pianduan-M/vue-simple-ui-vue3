@@ -80,7 +80,7 @@ export function merge(target, source) {
       } else if (isObject(targetVal) && isObject()) {
         target[sourceKey] = merge(targetVal, sourceVal)
       } else if (isArray(targetVal) && isArray(sourceVal)) {
-        target[sourceKey] = [...targetVal, ...sourceVal]
+        target[sourceKey] = [...new Set([...targetVal, ...sourceVal])]
       }
     })
   }

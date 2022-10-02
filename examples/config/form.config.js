@@ -54,16 +54,16 @@ export const searchFormItems = [
   {
     label: "姓名",
     prop: "name",
-    type: "input",
+    component: "input",
   },
   {
     label: "年龄",
     prop: "age",
-    type: "input",
+    component: "input",
   },
   {
     label: "性别",
-    type: "select",
+    component: "select",
     prop: "gender",
     options: "gender",
     // options: [
@@ -86,13 +86,13 @@ export const searchFormItems = [
   {
     label: "时间",
     prop: "createTime",
-    type: "date",
+    component: "date",
     onChange(val) {
       console.log(val);
     },
     placeholder: "请选择",
-    format:"YYYY-MM-DD",
-    valueFormat:"YYYY-MM-DD",
+    format: "YYYY-MM-DD",
+    valueFormat: "YYYY-MM-DD",
 
   }
 ];

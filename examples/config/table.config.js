@@ -6,45 +6,36 @@ const genders = {
 export const tableColumns = [
   {
     type: 'expand',
-    children:{
-      elName:"div",
-      children:"abc"
-    }
   },
   {
     type: 'selection',
- 
   },
   { label: '时间', prop: 'createTime' },
-  { label: '名字', prop: 'name' },
+  { label: '名字', prop: 'name', renderHeaderTips: () => 'test' },
   { label: '年龄', prop: 'age' },
   {
     label: '性别',
     prop: 'gender',
-    formatter(value) {
+    formatter(row, value) {
       return genders[value] || ''
     }
   },
   { label: '身高', prop: 'height', unit: 'm' },
   { label: '体重', prop: 'weight', unit: 'kg' },
+  { label: '政治面貌', prop: 'politics', enum: 'politicsList' },
   {
-    label: '头像',
-    children:{
-      childrenType:"image",
-      key:"image.fileUrl",
-      attrs:{
-        class:['test'],
-        style:{width:'120px'},
-        onClick(){
-          console.log('test');
-        }
-      }
+    label: '学历', prop: 'education', enum: {
+      showValue: true,
     }
   },
   {
+    label: '头像',
+
+  },
+  {
     label: '操作',
-    slotName: 'operate',
-    props: { align: 'center' }
+    slot: 'operate',
+    align: 'center'
   }
 ]
 
