@@ -1,4 +1,7 @@
-import { h } from 'vue'
+export * from './is'
+export * from './vdom'
+
+import { h, resolveComponent } from 'vue'
 import { isObject, isArray, isString, isFunction } from './is'
 
 export function createEventsObj(eventObj = {}, row) {
@@ -115,4 +118,19 @@ export function param2Obj(url) {
     }
   })
   return obj
+}
+
+
+export const handleResolveComponent = (componentKeys = []) => {
+  const result = {}
+  if (isArray(componentKeys)) {
+    componentKeys.forEach(key => {
+      const component = resolveComponent(key)
+      if (!component) {
+        throw new Error(`Component ${key} not register`)
+      }
+      result[key] = component
+    })
+  }
+  return result
 }

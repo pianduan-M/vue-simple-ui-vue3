@@ -1,11 +1,17 @@
 import { h, resolveComponent } from 'vue'
-import { } from 'element-plus'
 import {
+  isObject,
+  isFunction,
+  isArray,
+  isString,
+  isVNode,
   formatRowDataByKey
-} from '../../../src/utils/index'
-import { isObject, isFunction, isArray, isString } from '../../../src/utils/is'
-import { isVNode } from '../../../src/utils/vdom'
-import { columnTypeList, isNativeColumnType, handleColumnTypeByEnum } from './column-type'
+} from '@pd-simple-ui/utils'
+import {
+  columnTypeList,
+  isNativeColumnType,
+  handleColumnTypeByEnum
+} from './column-type'
 import TableHeadTips from './TableHeadTips.vue'
 
 // 创建列
@@ -33,8 +39,11 @@ export function createTableColumn(columns, commonColumnOptions) {
 
     // 如果有 children 递归调用
     if (children && Array.isArray(children)) {
-
-      const childrenNode = createTableColumn.call(this, children, commonColumnOptions)
+      const childrenNode = createTableColumn.call(
+        this,
+        children,
+        commonColumnOptions
+      )
       return h(
         ElTableColumn,
         {
@@ -45,7 +54,9 @@ export function createTableColumn(columns, commonColumnOptions) {
         childrenNode
       )
     } else {
-      const columnContent = !isNativeColumnType(column.type) ? createTableColumnContent.call(this, column) : ''
+      const columnContent = !isNativeColumnType(column.type)
+        ? createTableColumnContent.call(this, column)
+        : ''
 
       return h(
         ElTableColumn,
@@ -57,9 +68,7 @@ export function createTableColumn(columns, commonColumnOptions) {
         columnContent
       )
     }
-
   })
-
 }
 
 // 创建列内容
@@ -72,8 +81,7 @@ export function createTableColumnContent(column) {
       resultSlots = createSlotByFunctionType.call(this, column.slot, column)
       break
     case isObject(column.slot):
-
-      Object.keys(column.slot).map(key => {
+      Object.keys(column.slot).map((key) => {
         const value = column.slot[key]
         if (isFunction(value)) {
           resultSlots[key] = createSlotByFunctionType.call(this, value, column)
@@ -84,7 +92,11 @@ export function createTableColumnContent(column) {
       break
     // 如果是 字符串类型 就当做是插槽名使用
     case isString(column.slot):
-      resultSlots.default = createSlotByStringType.call(this, column.slot, column)
+      resultSlots.default = createSlotByStringType.call(
+        this,
+        column.slot,
+        column
+      )
       // 没有 slot 当做普通列 调用 formatter 和 拼接 unit
       break
     default:
@@ -126,10 +138,10 @@ function createSlotByFunctionType(slot, column) {
 
 // if slot is string
 function createSlotByStringType(slot) {
-  const scopedSlot = this.$slots[slot];
+  const scopedSlot = this.$slots[slot]
   if (scopedSlot) {
     return function helper(props) {
-      return scopedSlot(props);
+      return scopedSlot(props)
     }
   } else {
     return () => this.nullValueDefault
@@ -138,11 +150,10 @@ function createSlotByStringType(slot) {
 
 // table column default
 function createDefaultSlot(column) {
-
   return ({ row }) => {
     let value
     if (column.prop) {
-      value = formatRowDataByKey(column.prop, row);
+      value = formatRowDataByKey(column.prop, row)
     }
 
     // 有枚举配置调用处理方法
@@ -160,11 +171,11 @@ function createDefaultSlot(column) {
     }
 
     // 普通数据
-    value = value ? value : this.nullValueDefault;
+    value = value ? value : this.nullValueDefault
     if (column.formatter && isFunction(column.formatter)) {
-      value = column.formatter(row, value);
+      value = column.formatter(row, value)
     }
-    return value + (column.unit ? column.unit : "");
+    return value + (column.unit ? column.unit : '')
   }
 }
 
@@ -175,7 +186,6 @@ function createTableColumnHeaderTips(column) {
     const label = column.label
     return h(TableHeadTips, { content, label })
   }
-
 }
 
 export default {}

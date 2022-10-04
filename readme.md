@@ -69,7 +69,7 @@
 | 参数                          | 说明                                                         | 类型                   | 可选值   | 默认值 |
 | ----------------------------- | ------------------------------------------------------------ | ---------------------- | -------- | ------ |
 | layout                        | el-form-item 的 ElCol 的 props                               | object                 | —        | —      |
-| component                     | el-form-item 管理下的表单元素类型，可以是字符串跟vue 组件，如果是字符串，会先匹配 select,input 使用el-select el-input,没有匹配上再用 resolveComponent 匹配全局注册的组件 | string, vueComponent   | 表单组件 | —      |
+| component                     | el-form-item 管理下的表单元素类型，可以是字符串跟vue 组件，如果是字符串，会先匹配 select,input，date 使用el-select el-input,没有匹配上再用 resolveComponent 匹配全局注册的组件 | string, vueComponent   | 表单组件 | —      |
 | renderLabel                   | el-form-item 中 label 值，如果该值是 string 时，将作为插槽名 | function string        | —        | —      |
 | labelTooltip                  | el-form-item 中 label 的 tips 内容                           | string,object,function | —        | —      |
 | isHidden                      | 是否隐藏该项                                                 | boolean                | —        | —      |

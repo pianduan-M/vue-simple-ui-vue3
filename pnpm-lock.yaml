@@ -10,6 +10,8 @@ importers:
       '@babel/plugin-transform-block-scoping': ^7.18.4
       '@babel/preset-env': ^7.18.2
       '@element-plus/icons-vue': ^2.0.9
+      '@pd-simple-ui/components': workspace:^1.0.0
+      '@pd-simple-ui/utils': workspace:^1.0.0
       '@vue/compiler-sfc': ^3.2.37
       '@vuepress/client': ^2.0.0-beta.42
       babel-loader: ^8.2.5
@@ -40,6 +42,8 @@ importers:
       webpack-dev-server: ^4.9.2
     dependencies:
       '@element-plus/icons-vue': 2.0.9_vue@3.2.37
+      '@pd-simple-ui/components': link:packages/components
+      '@pd-simple-ui/utils': link:packages/utils
       cz-conventional-changelog: 3.3.0
       element-plus: 2.2.6_vue@3.2.37
       vue: 3.2.37

@@ -1,24 +1,25 @@
-import { ref, h, isRef, resolveComponent, inject, watch, defineProps } from 'vue'
+import {
+  ref,
+  h,
+  isRef,
+  resolveComponent,
+  inject,
+  watch,
+  defineProps
+} from 'vue'
+
+import {
+  isFunction,
+  isString,
+  isArray,
+  isObject,
+  handleResolveComponent,
+  getSelectOptions
+} from '@pd-simple-ui/utils'
+
 import { QuestionFilled } from '@element-plus/icons-vue'
 import { formLabelStyle, formItemContentDescStyle } from './style'
-
-import { isFunction, isString, isArray, isObject } from '../../../src/utils/is'
-import { getSelectOptions } from '../../../src/utils'
 import defaultProps from './props'
-
-const handleResolveComponent = (componentKeys = []) => {
-  const result = {}
-  if (isArray(componentKeys)) {
-    componentKeys.forEach(key => {
-      const component = resolveComponent(key)
-      if (!component) {
-        throw new Error(`Component ${key} not register`)
-      }
-      result[key] = component
-    })
-  }
-  return result
-}
 
 export default {
   name: 'PdForm',
@@ -43,7 +44,6 @@ export default {
     const resetFields = (props) => formRef.value?.resetFields(props)
     const clearValidate = (props) => formRef.value?.clearValidate(props)
 
-
     // 祖先节点 提供一个 dialog 开关标识
     const dialogVisible = inject('dialogVisible')
     watch(dialogVisible, (newVal) => {
@@ -52,11 +52,16 @@ export default {
       }
     })
 
-    return { formRef, validate, validateField, scrollToField, resetFields, clearValidate }
+    return {
+      formRef,
+      validate,
+      validateField,
+      scrollToField,
+      resetFields,
+      clearValidate
+    }
   },
-  computed: {
-
-  },
+  computed: {},
 
   render() {
     const {
@@ -67,7 +72,7 @@ export default {
       ElSelect,
       ElOption,
       ElInput,
-      ElTooltip,
+      ElTooltip
     } = handleResolveComponent([
       'ElForm',
       'ElFormItem',
@@ -76,9 +81,8 @@ export default {
       'ElSelect',
       'ElOption',
       'ElInput',
-      'ElTooltip',
+      'ElTooltip'
     ])
-
 
     const createSlots = (slotName) => {
       const slots = this.$slots[slotName]
@@ -119,15 +123,23 @@ export default {
       // eslint-disable-next-line default-case
       switch (true) {
         case isString(labelTooltip):
-          result = h(ElTooltip, { effect: 'light', placement: 'top', content: labelTooltip }, h(QuestionFilled, { style: { width: '1em', marginLeft: "8px" } }))
-          break;
+          result = h(
+            ElTooltip,
+            { effect: 'light', placement: 'top', content: labelTooltip },
+            h(QuestionFilled, { style: { width: '1em', marginLeft: '8px' } })
+          )
+          break
         case isObject(labelTooltip):
           result = h(ElTooltip, { ...labelTooltip }, QuestionFilled)
-          break;
+          break
         case isFunction(labelTooltip):
           const content = labelTooltip(this.modelValue)
-          result = h(ElTooltip, { effect: 'light', placement: 'top', content }, h(QuestionFilled, { style: { width: '1em', marginLeft: "8px" } }))
-          break;
+          result = h(
+            ElTooltip,
+            { effect: 'light', placement: 'top', content },
+            h(QuestionFilled, { style: { width: '1em', marginLeft: '8px' } })
+          )
+          break
       }
 
       return result
@@ -153,7 +165,9 @@ export default {
       if (options && isArray(options)) {
         const childrenOptions = getSelectOptions(options, this.selectOptionMap)
 
-        children = (isRef(childrenOptions) ? childrenOptions.value : childrenOptions).map((option) =>
+        children = (
+          isRef(childrenOptions) ? childrenOptions.value : childrenOptions
+        ).map((option) =>
           h(inputChildrenComponent ? inputChildrenComponent : ElOption, {
             value: option.value,
             label: option.label,
@@ -198,25 +212,31 @@ export default {
       const contentDesc = createFormItemContentDesc(item)
       return {
         default: () => [inputNode, contentDesc]
-
       }
     }
 
-    // 创建 desc 
+    // 创建 desc
     const createFormItemContentDesc = ({ desc }) => {
       let result
       // eslint-disable-next-line default-case
       switch (true) {
         case isString(desc):
           result = desc
-          break;
+          break
         case isFunction(desc):
           result = desc(this.modelValue)
-          break;
+          break
       }
 
       if (result) {
-        result = h('div', { class: ['form-item-content__desc'], style: formItemContentDescStyle }, result)
+        result = h(
+          'div',
+          {
+            class: ['form-item-content__desc'],
+            style: formItemContentDescStyle
+          },
+          result
+        )
       }
 
       return result
@@ -295,6 +315,5 @@ export default {
           () => createFormItems()
         )
     )
-  },
-
+  }
 }

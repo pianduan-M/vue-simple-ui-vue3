@@ -1,50 +1,50 @@
-const TerserPlugin = require("terser-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const path = require("path");
+const TerserPlugin = require('terser-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const path = require('path')
 const { VueLoaderPlugin } = require('vue-loader/dist/index')
 
 module.exports = {
-  mode: "none",
+  mode: 'none',
   entry: {
-    index: "./packages/index.js",
-    "index.min": "./packages/index.js",
+    index: '/packages/components/index.js',
+    'index.min': '/packages/components/index.js'
   },
   output: {
-    path: path.resolve(__dirname, "../lib"),
-    filename: "[name].js",
-    libraryTarget: "umd",
-    libraryExport: "default",
+    path: path.resolve(__dirname, '../lib'),
+    filename: '[name].js',
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   },
   resolve: {
-    extensions: [".js", ".vue"],
+    extensions: ['.js', '.vue']
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        loader: "vue-loader",
+        loader: 'vue-loader'
       },
       {
         test: /\.js$/,
-        loader: "babel-loader",
+        loader: 'babel-loader'
       },
       {
         test: /\.scss$/,
-        use: ["vue-style-loader", "css-loader", "sass-loader"],
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-    ],
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        include: /\.min\.js$/,
-      }),
-    ],
+        include: /\.min\.js$/
+      })
+    ]
   },
-  plugins: [new CleanWebpackPlugin(), new VueLoaderPlugin()],
-};
+  plugins: [new CleanWebpackPlugin(), new VueLoaderPlugin()]
+}

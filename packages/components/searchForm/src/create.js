@@ -1,9 +1,12 @@
 import { h, resolveComponent, isRef } from 'vue'
-import { ElSelect, ElOption, ElInput, ElDatePicker } from 'element-plus'
-import { isString, isObject } from '../../../src/utils/is'
-import { getSelectOptions } from '../../../src/utils'
+import {
+  isString,
+  isObject,
+  getSelectOptions,
+  handleResolveComponent
+} from '@pd-simple-ui/utils'
 
-// 创建 search form 
+// 创建 search form
 export function searchFormRender() {
   const children = []
   const title = this.$slots.title
@@ -56,7 +59,17 @@ function createFormItems() {
     children.push(
       h(
         'div',
-        { class: ['pd-search-item', 'pd-search__after', { 'start': this.searchBtnPosition === 'start', 'end': this.searchBtnPosition === 'end' }], style: this.formItemStyle },
+        {
+          class: [
+            'pd-search-item',
+            'pd-search__after',
+            {
+              start: this.searchBtnPosition === 'start',
+              end: this.searchBtnPosition === 'end'
+            }
+          ],
+          style: this.formItemStyle
+        },
         afterSlot()
       )
     )
@@ -65,11 +78,10 @@ function createFormItems() {
   return children
 }
 
-
 // create search form item
 function createFormItemChildren(option) {
   const children = []
-  const { label = '', labelSlotName, labelStyle, } = option
+  const { label = '', labelSlotName, labelStyle } = option
   let { labelClass = [] } = option
 
   if (isString(labelClass)) {
@@ -89,14 +101,14 @@ function createFormItemChildren(option) {
         labelSlot
           ? labelSlot()
           : [
-            h('span', label),
-            this.labelSuffix
-              ? h('span', { class: 'label-suffix' }, this.labelSuffix)
-              : h('span', {
-                class: 'label-suffix',
-                style: { margin: '0 .2em' }
-              })
-          ]
+              h('span', label),
+              this.labelSuffix
+                ? h('span', { class: 'label-suffix' }, this.labelSuffix)
+                : h('span', {
+                    class: 'label-suffix',
+                    style: { margin: '0 .2em' }
+                  })
+            ]
       )
     )
   }
@@ -111,11 +123,26 @@ function createFormItemChildren(option) {
   return children
 }
 
-
 function createFormItemContentChildren(item) {
-  // eslint-disable-next-line prefer-const
-  let { label, prop, labelSlotName, component, options, slotName, labelStyle, labelClass, ...rest } = item
+  const { ElSelect, ElOption, ElInput, ElDatePicker } = handleResolveComponent([
+    'ElSelect',
+    'ElOption',
+    'ElInput',
+    'ElDatePicker'
+  ])
 
+  // eslint-disable-next-line prefer-const
+  let {
+    label,
+    prop,
+    labelSlotName,
+    component,
+    options,
+    slotName,
+    labelStyle,
+    labelClass,
+    ...rest
+  } = item
 
   if (slotName) {
     const contentSlot = this.$slots[slotName]
@@ -134,7 +161,8 @@ function createFormItemContentChildren(item) {
         if (options) {
           options = getSelectOptions(options, this.selectOptionMap)
           inputChildren = (isRef(options) ? options.value : options).map(
-            (option) => h(ElOption, { value: option.value, label: option.label })
+            (option) =>
+              h(ElOption, { value: option.value, label: option.label })
           )
         }
         break
@@ -156,10 +184,10 @@ function createFormItemContentChildren(item) {
     throw new Error('option component must a component or string')
   }
 
-  const commonProps = { ...this.commonProps, }
+  const commonProps = { ...this.commonProps }
 
   // 样式
-  let style = { width: '100%', }
+  let style = { width: '100%' }
   if (commonProps.style) {
     style = { ...style, ...commonProps.style }
     delete commonProps.style
@@ -170,7 +198,7 @@ function createFormItemContentChildren(item) {
   }
 
   // 类名
-  let classList = [this.inputClass,]
+  let classList = [this.inputClass]
   if (commonProps.class) {
     classList = { ...classList, ...commonProps.class }
     delete commonProps.class
@@ -198,6 +226,5 @@ function createFormItemContentChildren(item) {
     () => inputChildren
   )
 }
-
 
 export default {}

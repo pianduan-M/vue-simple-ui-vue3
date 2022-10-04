@@ -1,4 +1,4 @@
-import { isObject } from "../../../src/utils/is"
+import { isObject } from "@pd-simple-ui/utils"
 
 // eslint-disable-next-line import/no-mutable-exports
 export let globalTableDefaultProps = {};

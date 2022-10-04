@@ -47,6 +47,8 @@
         ref="formRef"
         :rules="rules"
         :colLayout="{ span: 24 }"
+        label-width="auto"
+        :defaultInputAttrs="{ style: { width: '240px' } }"
       >
         <template #weight>
           <el-input type="text" v-model="formData.weight" /> </template
@@ -66,7 +68,7 @@ export default defineComponent({
 })
 </script>
 <script setup>
-import PdSimpleUi from '../../packages'
+import PdSimpleUi from '@pd-simple-ui/components'
 import { tableColumns } from '../config/table.config'
 import { rules, searchFormItems } from '../config/form.config'
 import { registerTableActive } from '../components/TableActive'

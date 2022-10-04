@@ -1,10 +1,5 @@
 import { h, isRef } from 'vue'
-import { isFunction, isArray, isString, isObject } from "../../../src/utils/is"
-
-import {
-  formatRowDataByKey,
-} from "../../../src/utils/index";
-
+import { isFunction, isArray, isString, isObject, formatRowDataByKey } from "@pd-simple-ui/utils"
 
 // 储存 column type
 export const columnTypeList = {}
