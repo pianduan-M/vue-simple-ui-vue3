@@ -30,6 +30,6 @@ module.exports = {
     "import/first":"off",
     "one-var":"off",
     "import/no-extraneous-dependencies":"off",
-    "prefer-default-export.md":"off",
+    "prefer-default-export":"off",
   },
 };

@@ -69,6 +69,7 @@ export function pdTableEnumColumnTypePlugin(options) {
 export function handleColumnTypeByEnum(row, column) {
   let result = this.nullValueDefault
   const { enum: enumOption, prop } = column
+
   const value = formatRowDataByKey(prop, row);
   let enumList = []
   switch (true) {
@@ -96,7 +97,7 @@ export function handleColumnTypeByEnum(row, column) {
     result = enumLabel || result
 
     // 展示label 跟 value
-    if (isObject(enumOption) && enumOption.showValue) {
+    if (isObject(enumOption)) {
       const { showValue, getAttrs, ...rest } = enumOption
       const children = [h('div', result)]
       let attrs = {}

@@ -27,6 +27,7 @@ export function createTableColumn(columns, commonColumnOptions) {
       formatter,
       unit,
       renderHeaderTips,
+      columnTypeOptions,
       ...props
     } = column
 
@@ -81,7 +82,7 @@ export function createTableColumnContent(column) {
         }
       })
       break
-    // 如果是 字符串类型 就当做是插槽名使用作用域插槽
+    // 如果是 字符串类型 就当做是插槽名使用
     case isString(column.slot):
       resultSlots.default = createSlotByStringType.call(this, column.slot, column)
       // 没有 slot 当做普通列 调用 formatter 和 拼接 unit
@@ -92,10 +93,7 @@ export function createTableColumnContent(column) {
 
   // 判断是否有 renderHeaderTips
   if (column.renderHeaderTips && isFunction(column.renderHeaderTips)) {
-
     resultSlots.header = createTableColumnHeaderTips.call(this, column)
-    console.log('renderHeaderTips', resultSlots);
-
   }
 
   return resultSlots
@@ -104,7 +102,7 @@ export function createTableColumnContent(column) {
 // if slot is function vNode or html string
 function createSlotByFunctionType(slot, column) {
   return ({ row }) => {
-    const result = slot(h, row, column)
+    const result = slot(row, column)
     switch (true) {
       // if result is vNode
       case isVNode(result):
@@ -114,8 +112,13 @@ function createSlotByFunctionType(slot, column) {
         return h('div', { domProps: { innerHTML: result } })
       // if result is component or dom
       case isObject(result):
-        const { name, ...rest } = result
-        return h(name, rest)
+        const { component, ...rest } = result
+        // eslint-disable-next-line no-underscore-dangle
+        let _component = component
+        if (isString(_component)) {
+          _component = resolveComponent(component) || component
+        }
+        return h(_component, rest)
       default:
     }
   }
@@ -137,9 +140,14 @@ function createSlotByStringType(slot) {
 function createDefaultSlot(column) {
 
   return ({ row }) => {
+    let value
+    if (column.prop) {
+      value = formatRowDataByKey(column.prop, row);
+    }
+
     // 有枚举配置调用处理方法
     if (column.enum) {
-      return handleColumnTypeByEnum.call(this, row, column)
+      return handleColumnTypeByEnum.call(this, row, column, value)
     }
 
     // 如果有指定列类型 直接调用注册过的处理方法
@@ -147,17 +155,11 @@ function createDefaultSlot(column) {
     if (type) {
       const handler = columnTypeList[type]
       if (handler) {
-        return handler.call(this, row, column)
+        return handler.call(this, { row, column, value })
       }
     }
 
     // 普通数据
-    let value
-    if (!column.prop) {
-      value = this.nullValueDefault
-    } else {
-      value = formatRowDataByKey(column.prop, row);
-    }
     value = value ? value : this.nullValueDefault;
     if (column.formatter && isFunction(column.formatter)) {
       value = column.formatter(row, value);

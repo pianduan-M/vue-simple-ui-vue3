@@ -69,8 +69,10 @@ export default defineComponent({
 import PdSimpleUi from '../../packages'
 import { tableColumns } from '../config/table.config'
 import { rules, searchFormItems } from '../config/form.config'
+import { registerTableActive } from '../components/TableActive'
 
 const { PdTable, PdSearchForm, PdForm } = PdSimpleUi
+registerTableActive(PdTable)
 
 const useForm = PdForm.useForm
 const tableData = [
@@ -79,10 +81,26 @@ const tableData = [
     name: 'test',
     age: '13',
     gender: 'man',
+    height: '148',
+    weight: '70',
+    politics: 1,
+    education: 2,
+    marital: 1,
+    image: {
+      fileUrl:
+        'https://neilning-xc.github.io/2021/12/12/ckxj3g81e000p9ynthi2f2uqb/bg.jpeg'
+    }
+  },
+  {
+    createTime: '2022/02/22',
+    name: 'test2',
+    age: '33',
+    gender: 'man',
     height: '188',
     weight: '70',
     politics: 1,
-    education: 1,
+    education: 4,
+    marital: 2,
     image: {
       fileUrl:
         'https://neilning-xc.github.io/2021/12/12/ckxj3g81e000p9ynthi2f2uqb/bg.jpeg'
@@ -224,4 +242,12 @@ setTimeout(() => {
 }, 3000)
 </script>
 
-<style></style>
+<style>
+.danger-color {
+  color: red;
+}
+
+.success-color {
+  color: green;
+}
+</style>

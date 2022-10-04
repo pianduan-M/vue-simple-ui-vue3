@@ -1,37 +1,17 @@
 import { h, resolveComponent } from 'vue'
 import { createTableColumn } from './table.create'
+import { tableProps, globalTableDefaultProps } from './table-props'
 
 export default {
   name: 'PdTable',
   props: {
-    columns: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    commonColumnOptions: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    selectOptionMap: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    nullValueDefault: {
-      default: '-'
-    },
-
+    ...tableProps
   },
   data() {
     return {
     }
   },
-  components: {  },
+  components: {},
   methods: {},
   mounted() { },
   render() {
@@ -47,6 +27,7 @@ export default {
     return h(
       ElTable,
       {
+        ...globalTableDefaultProps,
         ...this.$attrs
       },
       () => createTableColumn.call(this, columns, commonColumnOptions)
