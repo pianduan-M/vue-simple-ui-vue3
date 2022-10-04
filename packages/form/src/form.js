@@ -1,20 +1,24 @@
-import { ref, h, isRef, resolveComponent, inject, watch } from 'vue'
-import {
-  ElForm,
-  ElFormItem,
-  ElRow,
-  ElCol,
-  ElSelect,
-  ElOption,
-  ElInput,
-  ElTooltip,
-} from 'element-plus'
+import { ref, h, isRef, resolveComponent, inject, watch, defineProps } from 'vue'
 import { QuestionFilled } from '@element-plus/icons-vue'
 import { formLabelStyle, formItemContentDescStyle } from './style'
 
 import { isFunction, isString, isArray, isObject } from '../../../src/utils/is'
 import { getSelectOptions } from '../../../src/utils'
 import defaultProps from './props'
+
+const handleResolveComponent = (componentKeys = []) => {
+  const result = {}
+  if (isArray(componentKeys)) {
+    componentKeys.forEach(key => {
+      const component = resolveComponent(key)
+      if (!component) {
+        throw new Error(`Component ${key} not register`)
+      }
+      result[key] = component
+    })
+  }
+  return result
+}
 
 export default {
   name: 'PdForm',
@@ -25,38 +29,57 @@ export default {
   },
 
   setup() {
+    const props = defineProps({
+      autoClearValidate: {
+        type: Boolean,
+        default: true
+      }
+    })
+
     const formRef = ref()
     const validate = () => formRef.value?.validate()
-    const validateField = (props) => formRef.value.validateField(props)
-    const scrollToField = (props) => formRef.value.scrollToField(props)
-    const resetFields = (props) => formRef.value.resetFields(props)
-    const clearValidate = (props) => formRef.value.clearValidate(props)
+    const validateField = (props) => formRef.value?.validateField(props)
+    const scrollToField = (props) => formRef.value?.scrollToField(props)
+    const resetFields = (props) => formRef.value?.resetFields(props)
+    const clearValidate = (props) => formRef.value?.clearValidate(props)
 
 
     // 祖先节点 提供一个 dialog 开关标识
     const dialogVisible = inject('dialogVisible')
     watch(dialogVisible, (newVal) => {
-      if (!newVal) {
+      if (!newVal && props.autoClearValidate) {
         clearValidate()
       }
     })
 
-
     return { formRef, validate, validateField, scrollToField, resetFields, clearValidate }
-  },
-  watch: {
-    // 监听 dialog 关闭 自动清除表单校验
-    visible() {
-      if (!this.visible && this.autoClearValidate) {
-        this.$refs.formRef.clearValidate();
-      }
-    },
   },
   computed: {
 
   },
 
   render() {
+    const {
+      ElForm,
+      ElFormItem,
+      ElRow,
+      ElCol,
+      ElSelect,
+      ElOption,
+      ElInput,
+      ElTooltip,
+    } = handleResolveComponent([
+      'ElForm',
+      'ElFormItem',
+      'ElRow',
+      'ElCol',
+      'ElSelect',
+      'ElOption',
+      'ElInput',
+      'ElTooltip',
+    ])
+
+
     const createSlots = (slotName) => {
       const slots = this.$slots[slotName]
       if (slots) {
@@ -102,7 +125,8 @@ export default {
           result = h(ElTooltip, { ...labelTooltip }, QuestionFilled)
           break;
         case isFunction(labelTooltip):
-          result = labelTooltip(h)
+          const content = labelTooltip(this.modelValue)
+          result = h(ElTooltip, { effect: 'light', placement: 'top', content }, h(QuestionFilled, { style: { width: '1em', marginLeft: "8px" } }))
           break;
       }
 
@@ -139,7 +163,7 @@ export default {
       }
 
       let inputComponent
-      // 如果 type 是一个字符串
+      // 如果 component 是一个字符串
       if (isString(component)) {
         switch (component) {
           case 'input':
@@ -187,7 +211,7 @@ export default {
           result = desc
           break;
         case isFunction(desc):
-          result = desc(h)
+          result = desc(this.modelValue)
           break;
       }
 
@@ -196,9 +220,7 @@ export default {
       }
 
       return result
-
     }
-
 
     const createFormItems = () => {
       const colLayout = { ...this.colLayout }
@@ -256,6 +278,7 @@ export default {
       }
       return formItems
     }
+
     return h(
       ElForm,
       {

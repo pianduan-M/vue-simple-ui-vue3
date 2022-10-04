@@ -6,7 +6,6 @@ export default {
     type: Object,
     required: true
   },
-
   // 创建 formItem 配置项
   formItems: {
     type: Array,
@@ -27,14 +26,12 @@ export default {
       }
     }
   },
-
   defaultFormItemProps: {
     type: Object,
     default() {
       return {}
     }
   },
-
   // 布局行的props
   rowAttrs: {
     type: Object,
@@ -42,7 +39,6 @@ export default {
       return {}
     }
   },
-
   defaultInputAttrs: {
     type: Object,
     default() {
@@ -54,5 +50,9 @@ export default {
     default() {
       return {}
     }
+  },
+  autoClearValidate: {
+    type: Boolean,
+    default: true
   }
 }

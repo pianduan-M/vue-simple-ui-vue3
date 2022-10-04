@@ -31,5 +31,6 @@ module.exports = {
     "one-var":"off",
     "import/no-extraneous-dependencies":"off",
     "prefer-default-export":"off",
+    "no-shadow":"off",
   },
 };

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ref, unref, defineProps, computed } from 'vue'
+import { defineProps, computed } from 'vue'
 
 export default {
   name: 'TableActive'
@@ -45,9 +45,7 @@ const title = computed(() => {
   return result
 })
 
-const onConfirm = () => {
-  
-}
+const onConfirm = () => {}
 </script>
 
 <style scoped lang="scss"></style>

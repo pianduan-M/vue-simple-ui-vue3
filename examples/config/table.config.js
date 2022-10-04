@@ -49,7 +49,6 @@ export const tableColumns = [
       options: maritalList,
 
       getAttrs(row) {
-        console.log(row, 'rowrow');
         const result = {}
 
         if (row && row.marital) {
