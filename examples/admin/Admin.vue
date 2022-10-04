@@ -1,5 +1,9 @@
 <template>
   <div>
+    <br />
+    <br />
+    <br />
+
     <PdTable
       :columns="tableColumns"
       :data="tableData"
@@ -10,7 +14,7 @@
         <el-button type="text" @click="handleEditorAdd(row)">编辑</el-button>
       </template>
     </PdTable>
-
+    <br />
     <PdSearchForm
       :gutter="20"
       :formItems="itemOptions"
