@@ -10,7 +10,7 @@ module.exports = {
     'index.min': '/packages/components/index.js'
   },
   output: {
-    path: path.resolve(__dirname, '../lib'),
+    path: path.resolve(__dirname, '../packages/pd-simple-ui/lib'),
     filename: '[name].js',
     libraryTarget: 'umd',
     libraryExport: 'default'
