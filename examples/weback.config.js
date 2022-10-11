@@ -5,12 +5,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   mode: 'development',
   devtool: 'source-map',
-  entry: path.resolve(__dirname,'./main.js'),
+  entry: path.resolve(__dirname, './src/main.js'),
   output: {
     path: path.resolve(__dirname, './build'),
     filename: 'js/bundle.js'
     // assetModuleFilename: "img/[name]_[hash:6][ext]"
   },
+
   module: {
     rules: [
       {
@@ -19,7 +20,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader',"sass-loader"]
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.js$/,
@@ -31,18 +32,23 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/')
+    }
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template:path.resolve(__dirname,  './index.html'),
+      template: path.resolve(__dirname, './index.html'),
       title: 'test'
     }),
     new VueLoaderPlugin()
   ],
   devServer: {
-    static: "/dist",
+    static: '/dist',
     port: 8080,
     hot: true,
 
-    open: true,
-  },
+    open: true
+  }
 }

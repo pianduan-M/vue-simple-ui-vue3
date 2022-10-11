@@ -1,17 +1,13 @@
 <template>
-  <AdminVue />
+  <router-view></router-view>
 </template>
 
 <script>
-import { defineComponent, } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'App'
 })
-</script>
-<script setup>
-import AdminVue from './admin/Admin.vue'
-
 </script>
 
 <style></style>

@@ -51,10 +51,14 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.9",
     "@pd-simple-ui/components": "workspace:^1.0.0",
+    "@pd-simple-ui/http": "workspace:^1.0.0",
     "@pd-simple-ui/utils": "workspace:^1.0.0",
+    "axios": "^1.0.0",
     "cz-conventional-changelog": "3.3.0",
     "element-plus": "^2.2.6",
-    "vue": "^3.2.37"
+    "mockjs": "^1.1.0",
+    "vue": "^3.2.37",
+    "vue-router": "^4.1.5"
   },
   "config": {
     "commitizen": {

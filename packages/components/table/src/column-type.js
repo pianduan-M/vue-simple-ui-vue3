@@ -1,16 +1,21 @@
 import { h, isRef } from 'vue'
-import { isFunction, isArray, isString, isObject, formatRowDataByKey } from "@pd-simple-ui/utils"
+import {
+  isFunction,
+  isArray,
+  isString,
+  isObject,
+  formatRowDataByKey
+} from '@pd-simple-ui/utils'
 
 // 储存 column type
 export const columnTypeList = {}
-
 
 // 储存注册的 plugin
 export const tablePluginList = []
 
 export function use(fn, options = {}) {
   if (!isFunction(fn)) {
-    throw new TypeError("table use plugin install must a function")
+    throw new TypeError('table use plugin install must a function')
   }
 
   tablePluginList.push(function helper() {
@@ -28,19 +33,18 @@ export function registerColumnType(columnTypeName, handler, options) {
     throw new Error('table column type name is required')
   }
   columnTypeList[columnTypeName] = handler(options)
-
 }
 
-// 枚举类型 
+// 枚举类型
 export function pdTableEnumColumnTypePlugin(options) {
   function enumType(row, column) {
     let result = this.nullValueDefault
-    const { prop, enumList, } = column
+    const { prop, enumList } = column
     const { getDomClassName } = options
-    const value = formatRowDataByKey(prop, row);
+    const value = formatRowDataByKey(prop, row)
 
     if (isArray(enumList)) {
-      const existingEnumItem = enumList.find(item => item.value === value)
+      const existingEnumItem = enumList.find((item) => item.value === value)
       const enumValue = existingEnumItem ? existingEnumItem.value : null
       const enumLabel = existingEnumItem ? existingEnumItem.label : null
       if (getDomClassName && enumValue) {
@@ -61,36 +65,38 @@ export function pdTableEnumColumnTypePlugin(options) {
 }
 
 // 枚举类型 处理方法
-export function handleColumnTypeByEnum(row, column) {
+export function handleColumnTypeByEnum(row, column, value) {
   let result = this.nullValueDefault
-  const { enum: enumOption, prop } = column
+  const { enum: enumOption } = column
 
-  const value = formatRowDataByKey(prop, row);
   let enumList = []
   switch (true) {
     case isString(enumOption):
       enumList = this.selectOptionMap[enumOption]
-      break;
+      break
     case isArray(enumOption):
       enumList = enumOption
-      break;
+      break
+    case isRef(enumOption):
+      enumList = enumOption.value
+      break
     case isObject(enumOption):
       enumList = enumOption.options
-      break;
+      break
     default:
-      break;
+      break
   }
 
   enumList = enumList || []
+
   if (isRef(enumList)) {
     enumList = enumList.value
   }
 
   if (isArray(enumList)) {
-    const existingEnumItem = enumList.find(item => item.value === value)
+    const existingEnumItem = enumList.find((item) => item.value === value)
     const enumLabel = existingEnumItem ? existingEnumItem.label : null
     result = enumLabel || result
-
     // 展示label 跟 value
     if (isObject(enumOption)) {
       const { showValue, getAttrs, ...rest } = enumOption

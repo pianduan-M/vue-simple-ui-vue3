@@ -41,7 +41,9 @@ export default {
   commonProps: {
     type: Object,
     default() {
-      return {}
+      return {
+        clearable: true
+      }
     }
   },
   searchBtnPosition: {
