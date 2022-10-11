@@ -131,7 +131,6 @@ function createFormItemContentChildren(item) {
     'ElDatePicker'
   ])
 
-  // eslint-disable-next-line prefer-const
   let {
     label,
     prop,

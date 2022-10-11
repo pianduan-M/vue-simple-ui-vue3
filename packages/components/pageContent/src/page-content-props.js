@@ -34,5 +34,11 @@ export default {
   size: {
     type: String,
     default: ''
+  },
+
+  // 搜索条件改变自动搜索
+  autoSearch: {
+    type: Boolean,
+    default: false
   }
 }

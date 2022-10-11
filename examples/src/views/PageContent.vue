@@ -22,7 +22,7 @@ import { ref } from 'vue'
 import TableImage from '../components/TableImage.vue'
 
 export default {
-  name: 'admin2'
+  name: 'Admin2'
 }
 </script>
 <script setup>

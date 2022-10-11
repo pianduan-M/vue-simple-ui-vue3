@@ -92,7 +92,11 @@ const { dimensionGroup, dimensionList, columns, showColumnList, tableSlots } =
   useTable(props)
 
 // 发送请求
-const { tableData, getTableData } = useRequest({ props, _queryParams })
+const { tableData, getTableData } = useRequest({
+  props,
+  _queryParams,
+  getQueryParams
+})
 // 搜索
 const onSearch = () => {
   getTableData(getQueryParams())

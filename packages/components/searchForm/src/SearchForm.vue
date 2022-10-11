@@ -66,6 +66,7 @@ export default {
     &__label {
       font-size: 14px;
       font-weight: 400;
+      white-space: nowrap;
     }
   }
 

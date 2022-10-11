@@ -1,7 +1,8 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { request } from '@pd-simple-ui/http'
+import { debounce } from 'throttle-debounce'
 
-export const useRequest = ({ props, _queryParams }) => {
+export const useRequest = ({ props, _queryParams, getQueryParams }) => {
   // 表格数据
   const tableData = ref([])
   const getTableData = async (params) => {
@@ -14,9 +15,16 @@ export const useRequest = ({ props, _queryParams }) => {
       tableData.value = res.data || []
       _queryParams.value.total = res.total
     } catch (error) {
-      console.log(error, 'error')
       tableData.value = []
     }
+  }
+
+  // 自动搜索
+  function helper() {
+    getTableData(getQueryParams())
+  }
+  if (props.autoSearch) {
+    watch(_queryParams, debounce(500, helper))
   }
 
   return { tableData, getTableData }
