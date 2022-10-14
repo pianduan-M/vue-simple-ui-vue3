@@ -84,9 +84,19 @@ const tableColumns = [
   {
     type: 'selection'
   },
-  { label: '时间', prop: 'createTime' },
-  { label: '名字', prop: 'name', renderHeaderTips: () => 'test' },
-  { label: '年龄', prop: 'age', footerComputed: { type: 'sum' } },
+  { label: '时间', prop: 'createTime', groupHidden: false },
+  {
+    label: '名字',
+    prop: 'name',
+    renderHeaderTips: () => 'test',
+    groupHidden: false
+  },
+  {
+    label: '年龄',
+    prop: 'age',
+    footerComputed: { type: 'sum' },
+    groupHidden: true
+  },
   {
     label: '性别',
     prop: 'gender',
@@ -156,7 +166,8 @@ const tableColumns = [
         row: { image: row.avatar.image },
         prop: 'image'
       }
-    }
+    },
+    width: '200px'
   },
   {
     label: '是否展示',
@@ -167,7 +178,8 @@ const tableColumns = [
       // successCallback() {
       //   pageContentRef.value?.onSearch()
       // }
-    }
+    },
+    width: '200px'
   },
   {
     label: '操作',

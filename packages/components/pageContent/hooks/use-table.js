@@ -61,7 +61,7 @@ export const useTable = (props) => {
         .map((item) => item.label)
     },
     set(val) {
-      dimensionList.value((item) => {
+      dimensionList.value.forEach((item) => {
         if (val.find((label) => label === item.label)) {
           item.hidden = false
         } else {
@@ -72,25 +72,17 @@ export const useTable = (props) => {
   })
 
   // show column list
-  const showColumnList = computed({
-    get() {
-      return props.tableColumns
-        .filter((column) => {
-          if (isUndef(column.show) && column.label) {
-            return true
-          }
-          return column.show
-        })
-        .map((item) => item.label)
-    },
-    set(val) {
-      props.tableColumns.map((column) => {
-        if (column.label) {
-          column.show = !!val.find((label) => label === column.label)
+  const showColumnList = ref([])
+
+  const filterShowColumnList = () =>
+    props.tableColumns
+      .filter((column) => {
+        if (isUndef(column.show) && column.label) {
+          return true
         }
+        return column.show
       })
-    }
-  })
+      .map((item) => item.label)
 
   // 表格列
   const columns = computed(() => {
@@ -114,7 +106,7 @@ export const useTable = (props) => {
             filterItem = column
           }
         }
-      } else if (isUndef(column.show) || column.show) {
+      } else if (showColumnList.value.find((label) => label === column.label)) {
         filterItem = column
       }
 
@@ -123,8 +115,17 @@ export const useTable = (props) => {
         result.push(restColumn)
       }
     })
+
     return result
   })
+
+  watch(
+    () => props.tableColumns,
+    () => {
+      showColumnList.value = filterShowColumnList()
+    },
+    { immediate: true }
+  )
 
   // search form 插槽
   const tableSlots = computed(() => {

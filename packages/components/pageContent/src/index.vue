@@ -39,7 +39,7 @@
       :dimensionList="dimensionList"
     />
     <FilterColumn
-      v-if="showColumnList.length"
+      v-if="!dimensionList.length"
       v-model:showColumnList="showColumnList"
       :columns="tableColumns"
     />

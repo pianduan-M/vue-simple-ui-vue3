@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="filter-column" :class="[filterColumnPosition]">
     <el-popover placement="left" width="200" trigger="click">
       <el-button type="text" slot="reference"
@@ -11,44 +11,90 @@
       </el-checkbox-group>
     </el-popover>
   </div>
-</template>
+</template> -->
 
 <script>
+import { h, resolveComponent } from 'vue'
+import { Setting } from '@element-plus/icons-vue'
+
 export default {
-  name: "FilterColumn",
+  name: 'FilterColumn',
   data() {
     return {
-      selectList: [],
-    };
+      selectList: []
+    }
   },
+  components: {},
   props: {
     columns: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     showColumnList: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     filterColumnPosition: {
       type: String,
-      default: "right",
-    },
+      default: 'right'
+    }
   },
-  components: {},
   methods: {},
   mounted() {},
   computed: {
     filterColumns: {
       get() {
-        return this.showColumnList;
+        return this.showColumnList
       },
       set(val) {
-        this.$emit("update:showColumnList", val);
-      },
-    },
+        this.$emit('update:showColumnList', val)
+      }
+    }
   },
-};
+  render() {
+    const wrapper = (children) =>
+      h(
+        'div',
+        { class: ['filter-column', this.filterColumnPosition] },
+        children
+      )
+
+    const ElPopover = resolveComponent('ElPopover')
+    const ElButton = resolveComponent('ElButton')
+    const ElCheckboxGroup = resolveComponent('ElCheckboxGroup')
+    const ElCheckbox = resolveComponent('ElCheckbox')
+
+    const triggerEl = () =>
+      h(ElButton, { type: 'text' }, h(Setting, { style: '1.5em', height: '1.5em' }))
+
+    const popoverContent = () =>
+      h(
+        ElCheckboxGroup,
+        {
+          modelValue: this.filterColumns,
+          'onUpdate:modelValue': (value) => {
+            this.filterColumns = value
+          }
+        },
+        checkboxList()
+      )
+
+    const checkboxList = () =>
+      this.columns
+        .filter((item) => item.label)
+        .map((item) =>
+          h('div', { key: item.label }, h(ElCheckbox, { label: item.label }))
+        )
+
+    const children = () =>
+      h(
+        ElPopover,
+        { placement: 'left', width: 200, trigger: 'click' },
+        { reference: triggerEl, default: popoverContent }
+      )
+    return wrapper(children())
+  }
+}
 </script>
 
 <style scoped lang="scss">
