@@ -34,8 +34,7 @@ export default {
     return h(
       'div',
       {
-        class: 'pd-search',
-        style: this.formStyle
+        class: 'pd-search'
       },
       searchFormRender.call(this)
     )
@@ -45,6 +44,8 @@ export default {
 
 <style lang="scss">
 .pd-search {
+  overflow: hidden;
+
   &__wrapper {
     display: flex;
     align-items: center;

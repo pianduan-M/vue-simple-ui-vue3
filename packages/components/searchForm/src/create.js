@@ -18,7 +18,8 @@ export function searchFormRender() {
     h(
       'div',
       {
-        class: `pd-search__wrapper ${this.flexWrap ? 'flex-wrap' : ''}`
+        class: `pd-search__wrapper ${this.flexWrap ? 'flex-wrap' : ''}`,
+        style: this.formStyle
       },
       createFormItems.call(this)
     )
@@ -151,7 +152,8 @@ function createFormItemContentChildren(item) {
   }
 
   let inputComponent,
-    inputChildren = []
+    inputChildren = [],
+    defaultPlaceholder = ''
   if (isString(component)) {
     switch (component) {
       case 'select':
@@ -164,14 +166,17 @@ function createFormItemContentChildren(item) {
               h(ElOption, { value: option.value, label: option.label })
           )
         }
+        defaultPlaceholder = `请选择${label}`
         break
       case 'input':
         inputComponent = resolveComponent('el-input')
         inputComponent = inputComponent ? inputComponent : ElInput
+        defaultPlaceholder = `请输入${label}`
         break
       case 'date':
         inputComponent = resolveComponent('el-date-picker')
         inputComponent = inputComponent ? inputComponent : ElDatePicker
+        defaultPlaceholder = `请选择${label}`
         break
       default:
         inputComponent = resolveComponent(component)
@@ -210,6 +215,7 @@ function createFormItemContentChildren(item) {
   return h(
     inputComponent,
     {
+      placeholder: defaultPlaceholder,
       style,
       class: classList,
       size: this.size,
